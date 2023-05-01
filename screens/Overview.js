@@ -3,13 +3,14 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList, Alert } from "react-native";
 
-import mock from "../mock/persons.json";
-
+// Define a functional component called Overview
 export const Overview = ({ navigation }) => {
+  // Declare state variables
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
 
+  // Use the useEffect hook to make an API request when the component mounts
   useEffect(() => {
     axios
       .get("https://api.lagtinget.ax/api/persons.json?state=1")
@@ -22,6 +23,7 @@ export const Overview = ({ navigation }) => {
       });
   }, []);
 
+  // Define a function to update the search term and filter the data accordingly
   const updateSearch = (newSearch) => {
     setSearch(newSearch);
 
@@ -38,6 +40,7 @@ export const Overview = ({ navigation }) => {
     }
   };
 
+  // Define a function to render each item in the FlatList
   const renderItem = ({ item }) => (
     <ListItem
       bottomDivider
@@ -59,8 +62,10 @@ export const Overview = ({ navigation }) => {
     </ListItem>
   );
 
+  // Return the JSX for the component
   return (
     <View style={styles.container}>
+      {/* Render the search bar */}
       <SearchBar
         placeholder="Search by name"
         lightTheme="true"
@@ -68,6 +73,7 @@ export const Overview = ({ navigation }) => {
         onChangeText={updateSearch}
         value={search}
       />
+      {/* Render the FlatList */}
       <FlatList
         data={filteredData}
         renderItem={renderItem}

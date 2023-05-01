@@ -14,11 +14,17 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+// This is a functional component called "Details" that takes in a single prop called "route"
 export const Details = ({ route }) => {
+  // This is a hook that is called whenever this component is mounted
   useEffect(() => {
+    // This creates a new AbortController object that can be used to abort fetch requests
     const controller = new AbortController();
+
+    // This function fetches tasks from an API endpoint with an ID and the given AbortController object
     fetchTasksWithIndicator(route.params.id, controller)
       .catch((err) => {
+        // If the fetch request was cancelled, log a message to the console
         if (err.name !== "CanceledError") {
           Alert.alert("Network error: " + err, "Please try again later");
         } else {
@@ -27,12 +33,18 @@ export const Details = ({ route }) => {
       })
       .finally(() => setLoading(false));
 
+    // This returns a function that will be called when this component is unmounted, which aborts any in-progress fetch requests
     return () => controller.abort();
+
+    // This empty array means that this hook will only run once (when the component is first mounted)
   }, []);
 
+  // These are state variables for the component
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // This function fetches tasks from an API endpoint with an ID and the given AbortController object,
+  // and sets the component's "tasks" state to the fetched tasks
   const fetchTasksWithIndicator = async (id, controller) => {
     const personResponse = await axios.get(
       `https://api.lagtinget.ax/api/persons/${id}.json`,
@@ -66,6 +78,7 @@ export const Details = ({ route }) => {
     setTasks(fetchedTasks);
   };
 
+  // This function fetches tasks from an API endpoint with an ID and adds them one by one to the component's "tasks" state
   const fetchTasksOneByOne = async (id) => {
     const personResponse = await axios.get(
       `https://api.lagtinget.ax/api/persons/${id}.json`
